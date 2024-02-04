@@ -1,5 +1,4 @@
 ultralytics
 opencv-python
 opencv-contrib-python
-wget
 streamlit

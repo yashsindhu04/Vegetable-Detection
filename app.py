@@ -6,6 +6,8 @@ import os
 import time
 import torch
 from ultralytics import YOLO
+from collections import Counter
+import numpy as np
 
 st.set_page_config(layout="wide")
 
@@ -32,8 +34,11 @@ def image_input(data_src):
         with col1:
             st.image(img_file, caption="Selected Image")
         with col2:
-            img = infer_image(Image.open(img_file))
+            img, result = infer_image(Image.open(img_file))
+            counter = quantity_estimate(result)
             st.image(img, caption="Model prediction")
+            for k, v in counter.items():
+                st.write(f"{v} {result[0].names[k]}")
 
 
 def video_input(data_src):
@@ -79,7 +84,7 @@ def video_input(data_src):
                 st.write("Can't read frame, stream ended? Exiting ....")
                 break
             frame = cv2.resize(frame, (width, height))
-            output_img = infer_image(frame)
+            output_img, _ = infer_image(frame)
             output.image(output_img)
             curr_time = time.time()
             fps = 1 / (curr_time - prev_time)
@@ -125,7 +130,7 @@ def live_input():
             st.write("Can't read frame, stream ended? Exiting ....")
             break
         frame = cv2.resize(frame, (width, height))
-        output_img = infer_image(frame)
+        output_img, _ = infer_image(frame)
         output.image(output_img)
         curr_time = time.time()
         fps = 1 / (curr_time - prev_time)
@@ -145,7 +150,11 @@ def infer_image(frame, size=None):
     for r in results:
         im_array = r.plot()  
         im = Image.fromarray(im_array[..., ::-1])  
-    return im
+    return im, results
+
+def quantity_estimate(result):    
+    counter = Counter(result[0].boxes.cls.numpy().astype(int))
+    return counter
 
 
 @st.cache_resource
