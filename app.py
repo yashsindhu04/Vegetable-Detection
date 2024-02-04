@@ -156,31 +156,6 @@ def load_model(device):
     print("model to ", device)
     return model_
 
-
-@st.cache_resource
-def download_model(url):
-    model_file = wget.download(url, out="models")
-    return model_file
-
-
-def get_user_model():
-    model_src = st.sidebar.radio("Model source", ["file upload", "url"])
-    model_file = None
-    if model_src == "file upload":
-        model_bytes = st.sidebar.file_uploader("Upload a model file", type=['pt'])
-        if model_bytes:
-            model_file = "models/uploaded_" + model_bytes.name
-            with open(model_file, 'wb') as out:
-                out.write(model_bytes.read())
-    else:
-        url = st.sidebar.text_input("model url")
-        if url:
-            model_file_ = download_model(url)
-            if model_file_.split(".")[-1] == "pt":
-                model_file = model_file_
-
-    return model_file
-
 def main():
     # global variables
     global model, confidence, cfg_model_path
