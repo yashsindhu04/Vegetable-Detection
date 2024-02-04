@@ -164,7 +164,7 @@ def load_model(device):
     print("model to ", device)
     return model_
 
-def main():
+def main(): 
     # global variables
     global model, confidence, cfg_model_path
 
