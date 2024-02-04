@@ -11,7 +11,7 @@ import numpy as np
 
 st.set_page_config(layout="wide")
 
-cfg_model_path = 'models/best 889.pt'
+cfg_model_path = 'models/best 908.pt'
 model = None
 confidence = .25
 
@@ -158,8 +158,8 @@ def quantity_estimate(result):
 
 
 @st.cache_resource
-def load_model(device):
-    model_ = YOLO('models/best 889.pt')
+def load_model(cfg_model_path, device):
+    model_ = YOLO(cfg_model_path)
     model_.to(device)
     print("model to ", device)
     return model_
@@ -183,7 +183,7 @@ def main():
             device_option = st.sidebar.radio("Select Device", ['cpu', 'cuda'], disabled=True, index=0)
 
         # load model
-        model = load_model(device_option)
+        model = load_model(cfg_model_path, device_option)
 
         # confidence slider
         confidence = st.sidebar.slider('Confidence', min_value=0.1, max_value=1.0, value=.45)
