@@ -1,11 +1,10 @@
 import glob
 import streamlit as st
-import wget
 from PIL import Image
-import torch
 import cv2
 import os
 import time
+import torch
 from ultralytics import YOLO
 
 st.set_page_config(layout="wide")
